@@ -81,13 +81,17 @@ vector<string> eliminar_span(vector<string> frases){
     vector<string> noSpan;
     vector<string> palabrasSpan = { "comprar","registrar","festivo","oferta","descuentos","pesos","barato"};
     for(string frase : frases){
+        bool tf = true;
         for(string pSpan : palabrasSpan){
             bool es_span = buscador(frase, pSpan);
-            if(!es_span){                
-                frase += "&";
-                noSpan.push_back(frase);
+            if(es_span){ 
+                tf = false;               
                 break;
             }
+        }
+        if(tf){
+            frase += "&";
+            noSpan.push_back(frase);
         }
     }
     return noSpan;
@@ -100,7 +104,7 @@ int main(){
 
     srand(time(NULL));
     random_device random;
-    uniform_int_distribution<int> cantidad(5,10);
+    uniform_int_distribution<int> cantidad(30,50);
     
     string alfabetoHuffman = "abcdefghijklmnopqrstuvwxyz &";
 
@@ -108,7 +112,7 @@ int main(){
     vector<string> frases = creacion_lista_frases(cantidad(random));
 
     vector<string> span = frasesSpan(frases);
-    frases = eliminar_span(frases);
+    vector<string> Nfrases = eliminar_span(frases);
     for(Nodo* item : alfabeto){
         miHeap.agregar(item);
     }
@@ -116,21 +120,21 @@ int main(){
     miHeap.huffman();
     // miHeap.imprimir();
 
-
     string noSpanBin = "";
-    for(string item : frases){
+    for(string item : Nfrases){
         noSpanBin += miHeap.encriptar(item, alfabeto);
     }
-    archivo.crear_archivo_bin(noSpanBin, "NoSpan.Bin");
-    string docNoSpan = archivo.leer_documento("../dist/NoSpan.Bin");
-    cout << archivo.desencriptar(docNoSpan, miHeap) << endl;
+    archivo.crear_archivo_bin(noSpanBin, "NoSpanBin");
+    string docNoSpan = archivo.leer_documento("../dist/NoSpanBin");
+    archivo.crear_archivo_txt(archivo.desencriptar(docNoSpan, miHeap), "NoSpan.txt");
 
     string spanBin = "";
     for(string item : span){
         spanBin += miHeap.encriptar(item, alfabeto);
     }
-    archivo.crear_archivo_bin(spanBin, "Span.Bin");
-    string docSpan = archivo.leer_documento("../dist/Span.Bin");
+    archivo.crear_archivo_bin(spanBin, "SpanBin");
+    string docSpan = archivo.leer_documento("../dist/SpanBin");
+    archivo.crear_archivo_txt(archivo.desencriptar(docSpan, miHeap), "Span.txt");
 
 
     return 0;

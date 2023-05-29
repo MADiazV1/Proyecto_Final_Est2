@@ -45,9 +45,27 @@ string Archivo::desencriptar(string texto, Heap arbol){
             nodo = nodo->der;
         }
         if(!nodo->huff){
-            nuevoTexto += nodo->get_letra();
-            nodo = arbol.heap[0];
+            if(nodo->get_letra() != '&'){
+                nuevoTexto += nodo->get_letra();
+                nodo = arbol.heap[0];
+            }else{
+                nuevoTexto += "\n";
+                nodo = arbol.heap[0];
+            }
         }
     }
     return nuevoTexto;
+}
+
+void Archivo::crear_archivo_txt(string texto, string file){
+    ofstream archivo(file, ios::binary);
+    if(archivo.is_open()){
+        archivo.write(texto.c_str(), texto.length());
+        archivo.close();
+        cout << "Archivo creado" << endl;
+        cout << "/---------------------------------------------------------------------------------------------/" << endl;
+    }else{
+        cout << "No se pudo crear el archivo." << endl;
+        cout << "/---------------------------------------------------------------------------------------------/" << endl;
+    }
 }

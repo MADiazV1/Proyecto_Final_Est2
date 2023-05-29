@@ -12,5 +12,5 @@ class Archivo{
         string leer_documento(string nombre);
 
         string desencriptar(string texto, Heap arbol);
-        void crear_archivo_txt(string texto);
+        void crear_archivo_txt(string texto, string file);
 };
